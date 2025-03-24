@@ -1,23 +1,17 @@
 #!/bin/bash -xe
 
-module use /soft/modulefiles
-module load chipStar/latest
-
+rm -f *.o *.a
 rm -f libgzstream.a
-rm -f test
 
-hipcc  -I. -O -c  gzstream.simpler.C
-ar cr libgzstream.a gzstream.simpler.o
+gcc -I. -c g.C
+ar cr libgzstream.a g.o
 
-hipcc  -I. -O -c test.C
+hipcc -I. -c k.C
+ar cr  libk.a k.o
 
-# problem, reorganizing libs for dynamic loading!
-#hipcc    test.o -o test -L.   -lgzstream 
+hipcc  -fgpu-rdc  -I. -c t.C
 
-# working:
-MPICH_CXX=hipcc mpicxx test.o ./libgzstream.a  -o test -lz
+#hipcc -Wl,--no-pie  -fgpu-rdc --hip-link t.o ./libgzstream.a  ./libk.a
+hipcc  -fgpu-rdc --hip-link k.o t.o ./libgzstream.a
 
-# reproducer, sort of:
-MPICH_CXX=hipcc mpicxx test.o ./libgzstream.a  -o test
-
-
+./a.out
