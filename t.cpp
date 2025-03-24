@@ -1,16 +1,16 @@
 #include <stdio.h>
 #include <math.h>
-#include "hip/hip_runtime.h"
+//#include "hip/hip_runtime.h"
 #include "k.h"
 
 #define HIP_ASSERT(x) (assert((x)==hipSuccess))
 
-__global__
-void saxpy(int n, float a, float *x, float *y)
-{
-  int i = hipBlockDim_x * hipBlockIdx_x + hipThreadIdx_x;
-  if (i < n) y[i] = a*x[i] + y[i];
-}
+// __global__
+// void saxpy(int n, float a, float *x, float *y)
+// {
+//   int i = hipBlockDim_x * hipBlockIdx_x + hipThreadIdx_x;
+//   if (i < n) y[i] = a*x[i] + y[i];
+// }
 
 int main(void)
 {
@@ -30,20 +30,21 @@ int main(void)
   HIP_ASSERT(hipMemcpy(d_x, x, N*sizeof(float), hipMemcpyHostToDevice));
   HIP_ASSERT(hipMemcpy(d_y, y, N*sizeof(float), hipMemcpyHostToDevice));
 
-  // Perform SAXPY on 1M elements
-  hipLaunchKernelGGL(saxpy,(N+255)/256, 256,0,0,N, 2.0f, d_x, d_y );
-  hipDeviceSynchronize ();
-  test();
+  // // Perform SAXPY on 1M elements
+  // hipLaunchKernelGGL(saxpy,(N+255)/256, 256,0,0,N, 2.0f, d_x, d_y );
+  // hipDeviceSynchronize ();
+  test( d_x, d_y, x, y, N);
+  test2( d_x, d_y, x, y, N);
 
-  HIP_ASSERT(hipMemcpy(y, d_y, N*sizeof(float), hipMemcpyDeviceToHost));
+  // HIP_ASSERT(hipMemcpy(y, d_y, N*sizeof(float), hipMemcpyDeviceToHost));
 
-  float maxError = 0.0f;
-  for (int i = 0; i < N; i++)
-    maxError = ( maxError > abs(y[i]-6.0f) ) ? maxError : abs(y[i]-6.0f) ;
-  printf("Max error: %f\n", maxError);
+  // float maxError = 0.0f;
+  // for (int i = 0; i < N; i++)
+  //   maxError = ( maxError > abs(y[i]-6.0f) ) ? maxError : abs(y[i]-6.0f) ;
+  // printf("Max error: %f\n", maxError);
 
-  HIP_ASSERT(hipFree(d_x));
-  HIP_ASSERT(hipFree(d_y));
-  free(x);
-  free(y);
+  // HIP_ASSERT(hipFree(d_x));
+  // HIP_ASSERT(hipFree(d_y));
+  // free(x);
+  // free(y);
 }
