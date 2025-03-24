@@ -33,7 +33,7 @@ int main(void)
   // Perform SAXPY on 1M elements
   hipLaunchKernelGGL(saxpy,(N+255)/256, 256,0,0,N, 2.0f, d_x, d_y );
   hipDeviceSynchronize ();
-  hipLaunchKernelGGL(saxpy2,(N+255)/256, 256,0,0,N, 2.0f, d_x, d_y );
+  test();
 
   HIP_ASSERT(hipMemcpy(y, d_y, N*sizeof(float), hipMemcpyDeviceToHost));
 
