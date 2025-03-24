@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <math.h>
 #include "hip/hip_runtime.h"
-#include "g.h"
 #include "k.h"
 
 #define HIP_ASSERT(x) (assert((x)==hipSuccess))
@@ -19,7 +18,6 @@ int main(void)
   float *x, *y, *d_x, *d_y;
   x = (float*)malloc(N*sizeof(float));
   y = (float*)malloc(N*sizeof(float));
-  open( "c", 0);
 
   HIP_ASSERT(hipMalloc(&d_x, N*sizeof(float)));
   HIP_ASSERT(hipMalloc(&d_y, N*sizeof(float)));
