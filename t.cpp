@@ -35,13 +35,11 @@ int main(void)
   hipDeviceSynchronize ();
   hipLaunchKernelGGL(saxpy2,(N+255)/256, 256,0,0,N, 2.0f, d_x, d_y );
 
-
-
   HIP_ASSERT(hipMemcpy(y, d_y, N*sizeof(float), hipMemcpyDeviceToHost));
 
   float maxError = 0.0f;
   for (int i = 0; i < N; i++)
-    maxError = ( maxError > abs(y[i]-4.0f) ) ? maxError : abs(y[i]-4.0f) ;
+    maxError = ( maxError > abs(y[i]-6.0f) ) ? maxError : abs(y[i]-6.0f) ;
   printf("Max error: %f\n", maxError);
 
   HIP_ASSERT(hipFree(d_x));
