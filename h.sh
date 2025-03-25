@@ -3,9 +3,9 @@
 rm -f *.o *.a
 
 # this build does not work:
-hipcc -I. -c k.cu
-hipcc -I. -c k1.cu
-hipcc --emit-static-lib  -I. k.o k1.o -o libk.a
+#hipcc -I. -c k.cu
+#hipcc -I. -c k1.cu
+#hipcc --emit-static-lib  -I. k.o k1.o -o libk.a
 #ar rcsD  libk.a k.o
 
 # this build leads to
@@ -23,7 +23,7 @@ hipcc -fgpu-rdc -fPIC -I. -c k1.cu
 
 # dynamic lib works
 hipcc -fgpu-rdc --hip-link -fPIC -shared -Wl,-soname,libk.so -o libk.so k.o k1.o
-#ar rcs  libk.a k.o k1.o
+ar rcs  libk.a k.o k1.o
 
 # main file
 hipcc -fgpu-rdc  -I. -c t.cpp
