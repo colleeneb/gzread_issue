@@ -6,7 +6,12 @@ __global__
 void saxpy2(int n, float a, float *x, float *y)
 {
   int i = hipBlockDim_x * hipBlockIdx_x + hipThreadIdx_x;
-  if (i < n) y[i] = a*x[i] + y[i];
+  if (i < n) y[i] = a*x[i] + y[i];// +c_ABC[0];
+}
+
+__device__ int device_square(int x)
+{
+    return x * x;
 }
 
 void test(float *d_x,float *d_y, float *x, float *y, int N )
