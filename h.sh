@@ -1,4 +1,5 @@
 #!/bin/bash -xe
+export CHIP_BE=level0
 
 rm -f *.o *.a
 
@@ -18,15 +19,18 @@ rm -f *.o *.a
 # CHIP error [TID 107681] [1742822104.823276123] : Caught Error: hipErrorLaunchFailure
 # Max error: 4.000000
 
-hipcc -fgpu-rdc -fPIC -I. -c k.cu
-hipcc -fgpu-rdc -fPIC -I. -c k1.cu
+hipcc -fgpu-rdc --hip-link -fPIC -I. -c k.cu
+hipcc -fgpu-rdc --hip-link -fPIC -I. -c k1.cu
+
+hipcc -fgpu-rdc --hip-link -fPIC -I. -c c.cpp
 
 # dynamic lib works
-hipcc -fgpu-rdc --hip-link -fPIC -shared -Wl,-soname,libk.so -o libk.so k.o k1.o
-ar rcs  libk.a k.o k1.o
+hipcc  -fPIC -shared -Wl,-soname,libk.so -o libk.so k.o k1.o
+ar r  libk.a k.o k1.o
+ar r  libcpu.a c.o
 
 # main file
-hipcc -fgpu-rdc  -I. -c t.cpp
+hipcc -fgpu-rdc --hip-link  -I. -c t.cpp
 
 #hipcc -Wl,--no-pie  -fgpu-rdc --hip-link t.o ./libgzstream.a  ./libk.a
 #hipcc -fgpu-rdc --hip-link  t.o k.o k1.o
@@ -35,17 +39,15 @@ hipcc -fgpu-rdc  -I. -c t.cpp
 
 
 # testing just .os
-hipcc -fgpu-rdc --hip-link  t.o k.o k1.o
+hipcc -v -Wl,-no-pie  -fgpu-rdc --hip-link t.o libcpu.a k.o k1.o -lz
 
 # testing dynamic
-hipcc -fgpu-rdc --hip-link  t.o ./libk.so
-
+hipcc -Wl,-no-pie  -fgpu-rdc --hip-link t.o ./libk.so libcpu.a -lz
 # example with device functions called from other translation units but in the same .a
 # global constant used in other files -- hipmemcopy to
 
 LD_LIBRARY_PATH=./:$LD_LIBRARY_PATH ./a.out
 
 # testing static
-hipcc -fgpu-rdc --hip-link  t.o ./libk.a
-
+hipcc -fgpu-rdc --hip-link  t.o ./libk.a ./libcpu.a -lz
 ./a.out
