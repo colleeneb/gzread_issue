@@ -46,6 +46,6 @@ int main(void)
 
   // HIP_ASSERT(hipFree(d_x));
   // HIP_ASSERT(hipFree(d_y));
-  // free(x);
-  // free(y);
+  free(x);
+  free(y);
 }

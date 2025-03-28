@@ -30,7 +30,7 @@ ar r  libk.a k.o k1.o
 ar r  libcpu.a c.o
 
 # main file
-hipcc -fgpu-rdc --hip-link  -I. -c t.cpp
+hipcc -D__HIP_PLATFORM_SPIRV__ -fgpu-rdc --hip-link  -I. -c t.cpp
 
 #hipcc -Wl,--no-pie  -fgpu-rdc --hip-link t.o ./libgzstream.a  ./libk.a
 #hipcc -fgpu-rdc --hip-link  t.o k.o k1.o
@@ -39,15 +39,18 @@ hipcc -fgpu-rdc --hip-link  -I. -c t.cpp
 
 
 # testing just .os
-hipcc -v -Wl,-no-pie  -fgpu-rdc --hip-link t.o libcpu.a k.o k1.o -lz
 
-# testing dynamic
-hipcc -Wl,-no-pie  -fgpu-rdc --hip-link t.o ./libk.so libcpu.a -lz
-# example with device functions called from other translation units but in the same .a
-# global constant used in other files -- hipmemcopy to
+hipcc -D__HIP_PLATFORM_SPIRV__  -Wl,-no-pie  -fgpu-rdc --hip-link t.o libcpu.a k.o k1.o -lz
 
 LD_LIBRARY_PATH=./:$LD_LIBRARY_PATH ./a.out
 
+# testing dynamic
+#hipcc -Wl,-no-pie  -fgpu-rdc --hip-link t.o ./libk.so libcpu.a -lz
+# example with device functions called from other translation units but in the same .a
+# global constant used in other files -- hipmemcopy to
+
+#LD_LIBRARY_PATH=./:$LD_LIBRARY_PATH ./a.out
+
 # testing static
-hipcc -fgpu-rdc --hip-link  t.o ./libk.a ./libcpu.a -lz
-./a.out
+#hipcc -fgpu-rdc --hip-link  t.o ./libk.a ./libcpu.a -lz
+#./a.out

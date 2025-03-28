@@ -2,6 +2,8 @@
 
 #define HIP_ASSERT(x) (assert((x)==hipSuccess))
 
+__constant__ int p[9];
+
 __global__
 void saxpy3(int n, float a, float *x, float *y)
 {
@@ -30,6 +32,7 @@ void test2(float *d_x,float *d_y, float *x, float *y, int N )
   float pABC[] = {1, 2, 3};
    double *g = (double *)malloc( sizeof(int)*7);
    g[3]=1;
+   p[8]=0;
 
   //  hipMemcpyToSymbol(HIP_SYMBOL(c_ABC), &pABC, 3 * sizeof(float));
   
