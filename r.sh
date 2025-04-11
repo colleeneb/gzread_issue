@@ -28,6 +28,11 @@ $COMP  -I. -O -c test.C
 # working:
 $COMP -Wl,-no-pie test.o libk.a libgzstream.a   -o test -lz
 
+# working somehow:
+g++ test.o libk.a libgzstream.a   -o test -lz
+
+$COMP test.o libk.a libgzstream.a   -o test -lz
+
 # reproducer, sort of:
 #MPICH_CXX=hipcc mpicxx test.o ./libgzstream.a  -o test
 
