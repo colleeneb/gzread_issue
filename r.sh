@@ -32,3 +32,17 @@ $COMP -Wl,-no-pie test.o libk.a libgzstream.a   -o test -lz
 #MPICH_CXX=hipcc mpicxx test.o ./libgzstream.a  -o test
 
 
+# + return 0
+# + rm -f libgzstream.a
+# + rm -f libk.a
+# + rm -f test
+# + COMP=clang++
+# + gcc -I. -O -c gzstream.simpler.C
+# + ar cr libgzstream.a gzstream.simpler.o
+# + clang++ -I. -c s_gzstream.simpler.C
+# + ar cr libk.a s_gzstream.simpler.o
+# + clang++ -I. -O -c test.C
+# + clang++ test.o libk.a libgzstream.a -o test -lz
+# /usr/bin/ld: libgzstream.a(gzstream.simpler.o): relocation R_X86_64_32 against `.rodata.str1.1' can not be used when making a PIE object; recompile with -fPIE
+# /usr/bin/ld: failed to set dynamic section sizes: bad value
+# clang++: error: linker command failed with exit code 1 (use -v to see invocation)
