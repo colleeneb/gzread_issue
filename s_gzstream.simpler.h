@@ -17,23 +17,34 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // ============================================================================
 //
-// File          : test_gzip.C
-// Revision      : $Revision: 1.3 $
-// Revision_date : $Date: 2001/10/04 15:09:28 $
+// File          : gzstream.h
+// Revision      : $Revision: 1.5 $
+// Revision_date : $Date: 2002/04/26 23:30:15 $
 // Author(s)     : Deepak Bandyopadhyay, Lutz Kettner
 // 
-// Short test program reading a file, compressing it, and writing it.
+// Standard streambuf implementation following Nicolai Josuttis, "The 
+// Standard C++ Library".
 // ============================================================================
 
-#include <s_gzstream.simpler.h>
+#ifndef GZSTREAM_H
+#define GZSTREAM_H 1
+
+// standard C++ with new header file names and std:: namespace
 #include <iostream>
 #include <fstream>
-#include <stdlib.h>
+#include <zlib.h>
 
-int main( int argc, char*argv[]) {
-  shared_open( "c", 0);
-  return 0;
-}
+#ifdef GZSTREAM_NAMESPACE
+namespace GZSTREAM_NAMESPACE {
+#endif
 
+  void shared_open( const char* name, int open_mode);
+
+#ifdef GZSTREAM_NAMESPACE
+} // namespace GZSTREAM_NAMESPACE
+#endif
+
+#endif // GZSTREAM_H
 // ============================================================================
-// EOF
+// EOF //
+
